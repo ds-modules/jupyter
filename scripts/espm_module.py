@@ -65,10 +65,12 @@ class GBIFRequest(object):
         resp = requests.get(self.url, params=params)
         return resp.json()
 
-    def get_pages(self, params):
+    def get_pages(self, params, thresh=500):
         params = dict({'limit': 100, 'offset': 0}, **params)
         data = {'endOfRecords': False}
         while not data['endOfRecords']:
             data = self.fetch(params)
             params['offset'] += params['limit']
+            if params['offset'] > thresh:
+                break
             yield data
