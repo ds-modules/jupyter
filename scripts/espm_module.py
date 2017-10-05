@@ -117,3 +117,37 @@ class GBIFRequest(object):
             if params['offset'] > thresh:
                 break
             yield data
+
+
+class EcoEngineRequest(object):
+    """EcoEngine requests with pagination handling."""
+
+    url = 'https://ecoengine.berkeley.edu/api/checklists/?format=json'
+
+    def fetch(self, params):
+        resp = requests.get(self.url, params=params)
+        return resp.json()
+
+    def get_checklists(self, params, thresh=500):
+        data = {"next": True}
+        checklists = []
+        while data["next"]:
+            data = self.fetch(params)
+            checklists.extend(data['results'])
+        return checklists
+
+    def get_scientific_names_from_checklists(self, params, checklists=False):
+
+        checklists = self.get_checklists(params)
+        urls = [
+            r['url'] +
+            "?format=json" for r in checklists if "sagehen" in r['footprint']]
+
+        scientific_names = []
+
+        for u in urls:
+            res = requests.get(u).json()
+            obs = [o['scientific_name'] for o in res['observations']]
+            scientific_names.extend(obs)
+
+        return scientific_names
