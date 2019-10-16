@@ -21,7 +21,6 @@ def assign_colors(records_df, col_name):
         # We map an institute to a different random color.
         color_dict[c] = "#" + gen_hex_colour_code()
     color_dict
-
     base_html = '''<tbody><tr>
     <th style="width:25%">Collection</th>
     <th style="width:15%">HEX</th>
@@ -41,9 +40,10 @@ def assign_colors(records_df, col_name):
     to_render = base_html
 
     for k in color_dict.keys():
-        to_render += add_template.replace(
-            'COLLECTION', k).replace(
-            'HEX', color_dict[k])
+        if isinstance(k, str):
+            to_render += add_template.replace(
+                'COLLECTION', k).replace(
+                'HEX', color_dict[k])
 
     to_render += '</tbody>'
     to_render = to_render.replace('Collection', col_name)
