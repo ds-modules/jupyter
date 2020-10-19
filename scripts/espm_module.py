@@ -55,7 +55,7 @@ class CalAdaptRequest(object):
     series_url = 'http://api.cal-adapt.org/api/series/'
 
     def __init__(self, slug=None):
-        self.slug = slug or 'tasmax_year_CanESM2_rcp85'
+        self.slug = slug or 'tasmax_year_CNRM-CM5_rcp85'
         self.params = {'pagesize': 94}
 
     def concat_features(self, features, field='id'):
